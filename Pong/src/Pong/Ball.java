@@ -7,7 +7,7 @@ package Pong;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class Ball extends Block
+public class Ball extends Block implements Collidable
 {
 	private int xSpeed;
 	private int ySpeed;
@@ -106,8 +106,26 @@ public class Ball extends Block
 	}   
 
    //add the get methods
+        
+   public boolean didCollideLeft(Object obj){
+       Paddle test = (Paddle)obj;
+       if (((this.getxPos() <= test.getxPos() + test.getWidth()+Math.abs(this.getxSpeed())) && (this.getyPos()) >=test.getxPos() + test.getHeight()) || 
+               this.getyPos() + this.getHeight() >= test.getyPos() && this.getyPos() + this.getHeight() < test.getyPos() + test.getHeight()){
+           
+           if (this.getxPos() <= test.getxPos() + test.getWidth()-Math.abs(this.getxSpeed())){
+               setySpeed(-getySpeed());
+               return false;
+           }
+           else{
+               setxSpeed(-getxSpeed());
+               return true;
+           }
+       }
+   }
 
    //add a toString() method
-
+   public String toString(){
+       return getxPos() + " " + getyPos() + " " + getWidth() + " " + getHeight() + " " + getColor() + " " + getxSpeed() + " " + getySpeed();
+   }
    
 }
