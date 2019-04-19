@@ -121,6 +121,7 @@ public class Ball extends Block implements Collidable
                return true;
            }
        }
+       return false;
    }
 
    //add a toString() method
