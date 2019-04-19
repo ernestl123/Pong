@@ -22,21 +22,23 @@ public class Pong extends Canvas implements KeyListener, Runnable
 	private Paddle rightPaddle;
 	private boolean[] keys;
 	private BufferedImage back;
-        private static int leftxPos = 10;
+        private static int leftxPos = 30;
         private static int leftyPos = 10;
-        private static int rightxPos = 200;
-        private static int rightyPos = 10;
-        
+        private static int rightxPos = 700;
+        private static int rightyPos = 60;
+        private int leftScore;
+        private int rightScore;
 
 	public Pong()
 	{
 		//set up all variables related to the game
-            ball = new Ball(100,100,30,50,Color.BLUE,5,6);
-            leftPaddle = new Paddle(leftxPos, leftyPos, 10, 30, Color.RED, 10);
+            ball = new BlinkyBall(100,100,20,20,Color.RED,2,2);
+            leftPaddle = new Paddle(leftxPos, leftyPos, 10, 30, Color.RED, 5);
+            leftScore = 0;
+            rightScore = 0;
 		
 		
-		
-            rightPaddle = new Paddle(rightxPos, rightyPos, 10, 30, Color.RED, 10);
+            rightPaddle = new Paddle(rightxPos, rightyPos, 10, 30, Color.GREEN, 5);
 
 
 		keys = new boolean[4];
@@ -74,7 +76,7 @@ public class Pong extends Canvas implements KeyListener, Runnable
 
 
 		//see if ball hits left wall or right wall
-		if(!(ball.getxPos()>=10 && ball.getxPos()<=780))
+		if(!(ball.getxPos()>=0 && ball.getxPos()<=getWidth()))
 		{
 			ball.setxSpeed(0);
 			ball.setySpeed(0);
@@ -83,10 +85,6 @@ public class Pong extends Canvas implements KeyListener, Runnable
 
 		
 		//see if the ball hits the top or bottom wall 
-                if(!(ball.getxPos()>=10 && ball.getxPos()<= getWidth() - ball.getWidth()))
-		{
-			ball.setxSpeed(-ball.getxSpeed());
-		}
 
 		if(!(ball.getyPos()>=10 && ball.getyPos()<=getHeight() - ball.getHeight()))
 		{
@@ -96,12 +94,76 @@ public class Pong extends Canvas implements KeyListener, Runnable
 
 
 		//see if the ball hits the left paddle
+		if(!(ball.getxPos()>=0 && ball.getxPos()<=getWidth()-rightPaddle.getWidth()))
+		{
+			ball.setxSpeed(0);
+			ball.setySpeed(0);
+			if (ball.getxPos() <= leftPaddle.getxPos()){
+				graphToBack.setColor(Color.WHITE);
+				graphToBack.drawString("Right :  " + rightScore, 500, 500);
+				rightScore++;
+				graphToBack.setColor(Color.BLUE);
+				graphToBack.drawString("Right :  " + rightScore, 500, 500);
+                                graphToBack.setColor(Color.WHITE);
+				graphToBack.drawString("Left : "+leftScore, 200, 500);
+				graphToBack.setColor(Color.BLUE);
+				graphToBack.drawString("Left : "+leftScore, 200, 500);
+			}
+			
+			else if (ball.getxPos() >= rightPaddle.getxPos()+rightPaddle.getWidth()){graphToBack.setColor(Color.WHITE);
+				graphToBack.drawString("Right :  " + rightScore, 500, 500);
+				graphToBack.setColor(Color.BLUE);
+				graphToBack.drawString("Right :  " + rightScore, 500, 500);
+                            
+				graphToBack.setColor(Color.WHITE);
+				graphToBack.drawString("Left : "+leftScore, 200, 500);
+				leftScore++;
+				graphToBack.setColor(Color.BLUE);
+				graphToBack.drawString("Left : "+leftScore, 200, 500);
+			}
+			
+			ball.draw(graphToBack, Color.WHITE);
+			ball= new BlinkyBall(300 + (int) (Math.random() * 200),200 + (int) (Math.random() * 200),20,20,Color.BLUE, 2, 2);
+			ball.moveAndDraw(graphToBack);
+		}
+
 		
+		//see if the ball hits the top or bottom wall 
+		if(!(ball.getyPos()>=0 && ball.getyPos() <= getHeight())) {
+			ball.setySpeed(-ball.getySpeed());
+		}
+
+
 		
+		//see if the ball hits the left paddle
+		if (ball.didCollideLeft(leftPaddle)) 
+		{
+			ball.setxSpeed(Math.abs(ball.getxSpeed()));
+		}
+		else if (ball.didCollideRight(rightPaddle)) {
+			ball.setxSpeed(-Math.abs(ball.getxSpeed()));
+		}
 		
-		//see if the ball hits the right paddle
+				
+		if(keys[0] == true && leftPaddle.getyPos() >= 0)
+		{
+			leftPaddle.moveUpAndDraw(graphToBack);
+		}
 		
+		if(keys[1] == true && leftPaddle.getyPos() <= getHeight() - leftPaddle.getHeight())
+		{
+			leftPaddle.moveDownAndDraw(graphToBack);
+		}
 		
+		if(keys[2] == true && rightPaddle.getyPos() >= 0)
+		{
+			rightPaddle.moveUpAndDraw(graphToBack);
+		}
+		
+		if(keys[3] == true && rightPaddle.getyPos() <= getHeight()-leftPaddle.getHeight())
+		{
+			rightPaddle.moveDownAndDraw(graphToBack);
+		}
 		
 
 

@@ -107,22 +107,37 @@ public class Ball extends Block implements Collidable
 
    //add the get methods
         
-   public boolean didCollideLeft(Object obj){
-       Paddle test = (Paddle)obj;
-       if (((this.getxPos() <= test.getxPos() + test.getWidth()+Math.abs(this.getxSpeed())) && (this.getyPos()) >=test.getxPos() + test.getHeight()) || 
-               this.getyPos() + this.getHeight() >= test.getyPos() && this.getyPos() + this.getHeight() < test.getyPos() + test.getHeight()){
-           
-           if (this.getxPos() <= test.getxPos() + test.getWidth()-Math.abs(this.getxSpeed())){
-               setySpeed(-getySpeed());
-               return false;
-           }
-           else{
-               setxSpeed(-getxSpeed());
-               return true;
-           }
-       }
-       return false;
-   }
+   public boolean didCollideLeft(Object obj) {
+		Paddle paddle = (Paddle)obj;
+		if (getxPos()<=paddle.getxPos()+paddle.getWidth()&&getxPos()>paddle.getxPos()&&(getyPos()>=paddle.getyPos() && getyPos()<=paddle.getyPos()+paddle.getHeight())){
+			return true;
+		}
+		return false;
+	}
+
+	public boolean didCollideRight(Object obj) {
+		Paddle paddle = (Paddle)obj;
+		if (getxPos()+getWidth()>=paddle.getxPos()&&getxPos()<paddle.getxPos()&&(getyPos()>=paddle.getyPos() && getyPos()<=paddle.getyPos()+paddle.getHeight())){
+			return true;
+		}
+		return false;
+	}
+
+	public boolean didCollideTop(Object obj) {
+		Paddle paddle = (Paddle)obj;
+		if (getyPos()+getHeight()>=paddle.getyPos() && getyPos() < paddle.getyPos()+paddle.getHeight() && (getxPos()>=paddle.getxPos() && getxPos()+getWidth()<=paddle.getxPos()+paddle.getWidth())){
+			return true;
+		}
+		return false;
+	}
+
+	public boolean didCollideBottom(Object obj) {
+		Paddle paddle = (Paddle) obj;
+		if (getyPos()+getHeight()>paddle.getyPos() && getyPos() <= paddle.getyPos()+paddle.getHeight() && (getxPos()>=paddle.getxPos() && getxPos()+getWidth()<=paddle.getxPos()+paddle.getWidth())){
+					return true;			
+				}
+		return false;
+	}
 
    //add a toString() method
    public String toString(){
